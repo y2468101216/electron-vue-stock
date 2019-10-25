@@ -13,7 +13,7 @@
             </b-navbar-nav>
           </b-collapse>
         </b-navbar>
-      <div class="row">
+      <div>
           <router-view></router-view>
       </div>
     </main>

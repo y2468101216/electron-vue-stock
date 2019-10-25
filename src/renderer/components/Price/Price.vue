@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div>
     <main>
         <b-form @submit="onSubmit" @reset="onReset">
           <b-form-group
