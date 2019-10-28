@@ -8,13 +8,13 @@
             label-for="stock-id"
             description="台灣股票代號"
           >
-            <b-form-input
-              id="stock-id"
-              v-model="form.stock_id"
-              type="text"
-              required
-              placeholder="輸入股票代號"
-            ></b-form-input>
+          <b-form-input
+            id="stock-id"
+            v-model="form.stock_id"
+            type="text"
+            required
+            placeholder="輸入股票代號"
+          ></b-form-input>
           </b-form-group>
           <b-form-group
             id="input-group-start-date"
@@ -32,6 +32,12 @@
           <b-button type="submit" variant="primary">Submit</b-button>
           <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
+        <b-card-group>
+            <b-card v-for="item in card">
+                {{ item }}
+            </b-card>
+        </b-card-group>
+        
         <b-card class="mt-3" header="Form Data Result" v-if="chart.show">
           <line-chart
             :chartdata="chart.data"
@@ -52,9 +58,31 @@
       open (link) {
         this.$electron.shell.openExternal(link)
       },
+      getDataSet () {
+        let dataset = []
+        let that = this
+        console.log(this.chartData)
+        Object.keys(this.chartData).map(function (objectKey, index) {
+          let value = that.chartData[objectKey]
+          dataset.push({
+            label: objectKey,
+            borderColor: 'rgb(255, 99, 132)',
+            backgroundColor: 'rgba(0, 0, 0, 0)',
+            data: value
+          })
+        })
+
+        console.log(dataset)
+
+        return dataset
+      },
       onSubmit (evt) {
         evt.preventDefault()
         let that = this
+
+        if (that.card.includes(that.form.stock_id)) {
+          return
+        }
 
         this.$http.post(
           this.$base_url,
@@ -64,23 +92,25 @@
             'date': this.form.start_date
           }
         ).then(function (response) {
+          that.chartData[that.form.stock_id] = response.data.data.close
+          if (!that.card.includes(that.form.stock_id)) {
+            that.card.push(that.form.stock_id)
+          }
+          console.log(typeof that.getDataSet())
           that.chart.data = {
             labels: response.data.data.date,
-            datasets: [{
-              label: that.form.stock_id,
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(0, 0, 0, 0)',
-              data: response.data.data.close
-            }]
+            datasets: that.getDataSet()
           }
           that.chart.show = true
         })
       },
       onReset (evt) {
         evt.preventDefault()
-        this.form.stock_id = ''
+        this.form.stock_id = '0050'
         this.form.start_date = this.$moment().format('YYYY-MM-DD')
-        this.result.show = false
+        this.chart.show = false
+        this.card = []
+        this.chartData = {}
       }
     },
     data () {
@@ -94,7 +124,9 @@
           data: [],
           options: null,
           show: false
-        }
+        },
+        card: [],
+        chartData: {}
       }
     }
   }
