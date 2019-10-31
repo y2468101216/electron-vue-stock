@@ -33,15 +33,17 @@
           <b-button type="reset" variant="danger">Reset</b-button>
         </b-form>
         <b-card-group>
-            <b-card v-for="item in card">
-                {{ item }}
+            <b-card v-for="item in card" :key="item">
+                <span> {{ item }} </span>
+                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" />
             </b-card>
         </b-card-group>
         
-        <b-card class="mt-3" header="Form Data Result" v-if="chart.show">
+        <b-card class="mt-3" header="走勢圖" v-if="chart.show">
           <line-chart
             :chartdata="chart.data"
-            :options="chart.options"/>
+            :options="chart.options"
+            :updateKey="chart.updateKey"/>
         </b-card>
     </main>
   </div>
@@ -61,18 +63,15 @@
       getDataSet () {
         let dataset = []
         let that = this
-        console.log(this.chartData)
         Object.keys(this.chartData).map(function (objectKey, index) {
           let value = that.chartData[objectKey]
           dataset.push({
             label: objectKey,
             borderColor: 'rgb(255, 99, 132)',
             backgroundColor: 'rgba(0, 0, 0, 0)',
-            data: value
+            data: value.close
           })
         })
-
-        console.log(dataset)
 
         return dataset
       },
@@ -92,11 +91,13 @@
             'date': this.form.start_date
           }
         ).then(function (response) {
-          that.chartData[that.form.stock_id] = response.data.data.close
+          that.chartData[that.form.stock_id] = {
+            close: response.data.data.close,
+            date: response.data.data.date
+          }
           if (!that.card.includes(that.form.stock_id)) {
             that.card.push(that.form.stock_id)
           }
-          console.log(typeof that.getDataSet())
           that.chart.data = {
             labels: response.data.data.date,
             datasets: that.getDataSet()
@@ -111,6 +112,16 @@
         this.chart.show = false
         this.card = []
         this.chartData = {}
+      },
+      deleteCard (stockId) {
+        let index = this.card.indexOf(stockId)
+        this.card.splice(index, 1)
+        delete this.chartData[stockId]
+        this.chart.data = {
+          labels: this.chartData[this.card[0]].date,
+          datasets: this.getDataSet()
+        }
+        console.log(this.chart.data)
       }
     },
     data () {
@@ -126,7 +137,8 @@
           show: false
         },
         card: [],
-        chartData: {}
+        chartData: {},
+        updateKey: 'chart'
       }
     }
   }

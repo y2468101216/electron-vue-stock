@@ -11,6 +11,10 @@ export default {
     options: {
       type: Object,
       default: null
+    },
+    updateKey: {
+      type: String,
+      default: 'chart'
     }
   },
   mounted () {
