@@ -4,9 +4,8 @@
         <b-form @submit="onSubmit" @reset="onReset">
           <b-form-group
             id="input-group-stock-id"
-            label="stock-id"
+            label="台灣股票代號"
             label-for="stock-id"
-            description="台灣股票代號"
           >
           <b-form-input
             id="stock-id"
@@ -18,9 +17,8 @@
           </b-form-group>
           <b-form-group
             id="input-group-start-date"
-            label="start-date"
+            label="開始日期"
             label-for="start-date"
-            description="開始日期"
           >
             <date-picker
               id="start-date"
@@ -39,11 +37,11 @@
             </b-card>
         </b-card-group>
         
-        <b-card class="mt-3" header="走勢圖" v-if="chart.show">
+        <b-card class="mt-3" header="走勢圖" v-show="chart.show">
           <line-chart
-            :chartdata="chart.data"
+            :data="chart.data"
             :options="chart.options"
-            :updateKey="chart.updateKey"/>
+            :count="chart.count"/>
         </b-card>
     </main>
   </div>
@@ -55,25 +53,10 @@
 
   export default {
     name: 'Price',
-    components: { DatePicker, LineChart },
+    components: {DatePicker, LineChart},
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
-      },
-      getDataSet () {
-        let dataset = []
-        let that = this
-        Object.keys(this.chartData).map(function (objectKey, index) {
-          let value = that.chartData[objectKey]
-          dataset.push({
-            label: objectKey,
-            borderColor: 'rgb(255, 99, 132)',
-            backgroundColor: 'rgba(0, 0, 0, 0)',
-            data: value.close
-          })
-        })
-
-        return dataset
       },
       onSubmit (evt) {
         evt.preventDefault()
@@ -91,17 +74,15 @@
             'date': this.form.start_date
           }
         ).then(function (response) {
-          that.chartData[that.form.stock_id] = {
+          that.chart.data[that.form.stock_id] = {
             close: response.data.data.close,
             date: response.data.data.date
           }
+
           if (!that.card.includes(that.form.stock_id)) {
             that.card.push(that.form.stock_id)
           }
-          that.chart.data = {
-            labels: response.data.data.date,
-            datasets: that.getDataSet()
-          }
+          that.chart.count++
           that.chart.show = true
         })
       },
@@ -111,17 +92,17 @@
         this.form.start_date = this.$moment().format('YYYY-MM-DD')
         this.chart.show = false
         this.card = []
-        this.chartData = {}
+        this.chart.data = {}
       },
       deleteCard (stockId) {
         let index = this.card.indexOf(stockId)
         this.card.splice(index, 1)
-        delete this.chartData[stockId]
-        this.chart.data = {
-          labels: this.chartData[this.card[0]].date,
-          datasets: this.getDataSet()
+        delete this.chart.data[stockId]
+        this.chart.count++
+
+        if (this.card.length === 0) {
+          this.chart.show = false
         }
-        console.log(this.chart.data)
       }
     },
     data () {
@@ -132,13 +113,12 @@
           pikaday: ''
         },
         chart: {
-          data: [],
+          data: {},
           options: null,
-          show: false
+          show: false,
+          count: 0
         },
-        card: [],
-        chartData: {},
-        updateKey: 'chart'
+        card: []
       }
     }
   }

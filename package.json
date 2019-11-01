@@ -66,6 +66,7 @@
     "moment": "^2.24.0",
     "vue": "^2.6.10",
     "vue-chartjs": "^3.4.2",
+    "vue-color": "^2.7.0",
     "vue-electron": "^1.0.6",
     "vue-router": "^3.0.1",
     "vue2-datepicker": "^2.12.0",
