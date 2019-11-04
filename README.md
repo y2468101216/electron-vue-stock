@@ -25,7 +25,7 @@ npm run lint
 
 # Ref Project
 
-[url](https://github.com/FinMind/FinMind)
+[FinMind/FinMind](https://github.com/FinMind/FinMind)
 
 ---
 
