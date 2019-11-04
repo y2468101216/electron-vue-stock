@@ -50,6 +50,7 @@
       "icon": "build/icons/icon.icns"
     },
     "win": {
+      "publish": ["github"],
       "target": "nsis",
       "icon": "build/icons/icon.ico"
     },
