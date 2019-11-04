@@ -46,6 +46,7 @@
       ]
     },
     "mac": {
+      "publish": ["github"],
       "icon": "build/icons/icon.icns"
     },
     "win": {
