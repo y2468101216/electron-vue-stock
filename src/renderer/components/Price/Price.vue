@@ -27,8 +27,8 @@
               placeholder="輸入開始日期"
             ></date-picker>
           </b-form-group>
-          <b-button type="submit" variant="primary">Submit</b-button>
-          <b-button type="reset" variant="danger">Reset</b-button>
+          <b-button type="submit" variant="primary">加入股票</b-button>
+          <b-button type="reset" variant="danger">重置</b-button>
         </b-form>
         <b-card-group>
             <b-card v-for="item in card" :key="item">
@@ -37,7 +37,7 @@
             </b-card>
         </b-card-group>
         
-        <b-card class="mt-3" header="走勢圖" v-show="chart.show">
+        <b-card class="mt-3" header="走勢圖 (單位:台幣)" v-show="chart.show">
           <line-chart
             :data="chart.data"
             :options="chart.options"

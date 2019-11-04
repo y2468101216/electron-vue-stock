@@ -7,8 +7,8 @@
           <b-collapse id="nav-collapse" is-nav>
             <b-navbar-nav>
               <b-nav-item href="#">
-                <router-link to="/price">price</router-link>
-                <router-link to="/">Index</router-link>
+                <router-link to="/">首頁</router-link>
+                <router-link to="/price">收盤走勢圖</router-link>
               </b-nav-item>
             </b-navbar-nav>
           </b-collapse>

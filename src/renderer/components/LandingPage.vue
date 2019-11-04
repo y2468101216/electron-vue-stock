@@ -1,7 +1,16 @@
 <template>
   <div id="wrapper" class="container-fluid">
     <main>
-      hello
+      <div class="row">
+        <div class="col">
+          <h1>更新履歷</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <h3>v0.1 新增收盤走勢圖</h3>
+        </div>
+      </div>
     </main>
   </div>
 </template>
