@@ -19,7 +19,7 @@
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
     "test": "npm run unit && npm run e2e",
     "unit": "karma start test/unit/karma.conf.js",
-    "postinstall": "npm run lint:fix"
+    "postinstall": "electron-builder install-app-deps"
   },
   "build": {
     "productName": "electron-vue-stock",
@@ -46,11 +46,15 @@
       ]
     },
     "mac": {
-      "publish": ["github"],
+      "publish": [
+        "github"
+      ],
       "icon": "build/icons/icon.icns"
     },
     "win": {
-      "publish": ["github"],
+      "publish": [
+        "github"
+      ],
       "target": "nsis",
       "icon": "build/icons/icon.ico"
     },
@@ -66,7 +70,11 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.2",
     "chart.js": "^2.8.0",
+    "dotenv": "^8.2.0",
     "moment": "^2.24.0",
+    "sequelize": "^5.21.2",
+    "sequelize-cli": "^5.5.1",
+    "sqlite3": "^4.1.0",
     "vue": "^2.6.10",
     "vue-chartjs": "^3.4.2",
     "vue-color": "^2.7.0",
