@@ -1,6 +1,6 @@
-# electron-vue-shock
+# electron-vue-stock
 
-> electron vue shock
+> electron vue stock
 
 #### Build Setup
 

@@ -1,38 +1,19 @@
+const Dexie = require('dexie')
+const Config = require('config')
+const startVersion = 1
+
 class migrateMain {
-  constructor (dbPath) {
-    this.dbPath = dbPath
-    this.sqlite3 = require('sqlite3').verbose()
-    this.fs = require('fs')
-  }
+  static run () {
+    let db = new Dexie(Config.get('database.name'))
+    let endVersion = Config.get('database.version')
+    for (let i = startVersion; i <= endVersion; i++) {
+      let Schema = require('./schemas/Version' + i + 'Migrate')
+      let Seeder = require('../seeder/Version' + i + 'Seeder')
+      db.version(i).stores(Schema).upgrade(Seeder)
 
-  run () {
-    let db = new this.sqlite3.Database(this.dbPath) // 這裡是把資料存入記憶體
-    let sqls = []
-    fs.readdirSync('./sqls').forEach(file => {
-      sqls.push(file)
-    })
-    db.serialize(function () {
-      db.run('CREATE TABLE lorem (info TEXT)')
-    })
-
-    db.close()
-  }
-
-  checkMigrationTable () {
-    let db = new this.sqlite3.Database(this.dbPath) // 這裡是把資料存入記憶體
-    let sql = "SELECT name FROM sqlite_master WHERE type='table' AND name='migrations';"
-    db.all(sql, function (err, rows) {
-      if (rows.length == 0) {
-
-      }
-    })
-
-    db.close()
-  }
-
-  createMigrationTable () {
-
+      return db
+    }
   }
 }
 
-modules.export = migrateMain
+export default migrateMain

@@ -11,18 +11,19 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import dotenv from 'dotenv'
+import Config from 'config'
+import Migrate from '../migration/migrate-main'
 
 library.add(faTrashAlt)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.use(BootstrapVue)
-dotenv.config()
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
 Vue.moment = Vue.prototype.$moment = moment
 Vue.config.productionTip = false
-Vue.base_url = Vue.prototype.$base_url = process.env.BASE_URL
+Vue.base_url = Vue.prototype.$base_url = Config.get('base_url')
+Vue.db = Vue.prototype.$db = Migrate.run()
 
 /* eslint-disable no-new */
 new Vue({

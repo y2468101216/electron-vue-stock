@@ -36,7 +36,7 @@
                 <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" />
             </b-card>
         </b-card-group>
-        
+
         <b-card class="mt-3" header="走勢圖 (單位:台幣)" v-show="chart.show">
           <line-chart
             :data="chart.data"
@@ -61,11 +61,13 @@
       onSubmit (evt) {
         evt.preventDefault()
         let that = this
-
-        if (that.card.includes(that.form.stock_id)) {
+        this.findStock(that.form.stock_id, this.$db, this.remoteApi)
+      },
+      remoteApi (stock) {
+        let that = this
+        if (that.card.includes(stock.code)) {
           return
         }
-
         this.$http.post(
           this.$base_url,
           {
@@ -103,6 +105,9 @@
         if (this.card.length === 0) {
           this.chart.show = false
         }
+      },
+      findStock (input, db, callback) {
+        return db.stocks.where({code: input}).or('name').equals(input).first(callback)
       }
     },
     data () {

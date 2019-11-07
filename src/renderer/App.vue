@@ -22,7 +22,7 @@
 
 <script>
   export default {
-    name: 'electron-vue-shock'
+    name: 'electron-vue-stock'
   }
 </script>
 
