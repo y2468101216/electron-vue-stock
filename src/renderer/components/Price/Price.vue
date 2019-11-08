@@ -4,7 +4,7 @@
         <b-form @submit="onSubmit" @reset="onReset">
           <b-form-group
             id="input-group-stock-id"
-            label="台灣股票代號"
+            label="台灣股票代號或完整名稱"
             label-for="stock-id"
           >
           <b-form-input
@@ -12,7 +12,7 @@
             v-model="form.stock_id"
             type="text"
             required
-            placeholder="輸入股票代號"
+            placeholder="輸入台灣股票代號或完整名稱"
           ></b-form-input>
           </b-form-group>
           <b-form-group
@@ -76,13 +76,13 @@
             'date': this.form.start_date
           }
         ).then(function (response) {
-          that.chart.data[that.form.stock_id] = {
+          that.chart.data[stock.name] = {
             close: response.data.data.close,
             date: response.data.data.date
           }
 
-          if (!that.card.includes(that.form.stock_id)) {
-            that.card.push(that.form.stock_id)
+          if (!that.card.includes(stock.name)) {
+            that.card.push(stock.name)
           }
           that.chart.count++
           that.chart.show = true
@@ -96,10 +96,10 @@
         this.card = []
         this.chart.data = {}
       },
-      deleteCard (stockId) {
-        let index = this.card.indexOf(stockId)
+      deleteCard (stockName) {
+        let index = this.card.indexOf(stockName)
         this.card.splice(index, 1)
-        delete this.chart.data[stockId]
+        delete this.chart.data[stockName]
         this.chart.count++
 
         if (this.card.length === 0) {

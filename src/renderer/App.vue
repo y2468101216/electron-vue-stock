@@ -16,13 +16,26 @@
       <div>
           <router-view></router-view>
       </div>
+      <div>
+        <b-modal ref="load-modal" hide-footer hide-header-close title="下載股票資料">
+          <p class="my-4">請等待下載</p>
+        </b-modal>
+      </div>
     </main>
   </div>
 </template>
 
 <script>
+  import StockSeeder from '../seeder/Version1Seeder'
   export default {
-    name: 'electron-vue-stock'
+    name: 'electron-vue-stock',
+    mounted () {
+      this.$refs['load-modal'].show()
+      let that = this
+      StockSeeder(that.$db).then(function () {
+        that.$refs['load-modal'].hide()
+      })
+    }
   }
 </script>
 

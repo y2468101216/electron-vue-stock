@@ -1,9 +1,9 @@
 const axios = require('axios')
-const Config = require('config')
+const Config = require('../config/default')
 
 module.exports = function (db) {
-  axios.post(
-    Config.get('base_url'),
+  return axios.post(
+    Config.base_url,
     {
       'dataset': 'TaiwanStockInfo'
     }).then(response => {

@@ -1,6 +1,6 @@
 {
   "name": "electron-vue-stock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "昱廷陳昱廷 <y2468101216@gmail.com>",
   "description": "electron vue stock",
   "license": "MIT",
@@ -70,7 +70,6 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
     "chart.js": "^2.9.2",
-    "config": "^3.2.4",
     "dexie": "^2.0.4",
     "moment": "^2.24.0",
     "vue": "^2.6.10",
