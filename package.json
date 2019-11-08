@@ -59,6 +59,9 @@
       "icon": "build/icons/icon.ico"
     },
     "linux": {
+      "publish": [
+        "github"
+      ],
       "icon": "build/icons"
     }
   },
