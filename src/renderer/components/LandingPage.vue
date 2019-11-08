@@ -9,6 +9,7 @@
       <div class="row">
         <div class="col">
           <h3>v0.0.1 新增收盤走勢圖</h3>
+          <h3>v0.0.2 新增完整名稱查詢</h3>
         </div>
       </div>
     </main>
