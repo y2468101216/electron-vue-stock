@@ -9,6 +9,7 @@
               <b-nav-item href="#">
                 <router-link to="/">首頁</router-link>
                 <router-link to="/price">收盤走勢圖</router-link>
+                <router-link to="/minute-price">即時走勢圖</router-link>
               </b-nav-item>
             </b-navbar-nav>
           </b-collapse>
