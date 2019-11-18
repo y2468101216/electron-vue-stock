@@ -15,6 +15,10 @@ export default {
     count: {
       type: Number,
       default: 0
+    },
+    label: {
+      type: String,
+      default: null
     }
   },
   watch: {
@@ -26,14 +30,12 @@ export default {
     getDataSet () {
       let dataset = []
       let that = this
-      Object.keys(this.data).map(function (objectKey, index) {
-        let value = that.data[objectKey]
-        dataset.push({
-          label: objectKey,
-          borderColor: that.getRandomColor(),
-          backgroundColor: 'rgba(0, 0, 0, 0)',
-          data: value.deal_price
-        })
+
+      dataset.push({
+        label: this.label,
+        borderColor: that.getRandomColor(),
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        data: this.data.deal_price
       })
 
       return dataset
@@ -41,9 +43,9 @@ export default {
     getDate () {
       let date = []
       let that = this
-      Object.keys(this.data).map(function (objectKey, index) {
-        let objectDate = that.data[objectKey].date.split(' ')[1]
-        date = date.concat(objectDate.filter((item) => date.indexOf(item) < 0))
+      Object.keys(this.data.date).map(function (objectKey, index) {
+        let objectDate = that.data.date[objectKey].split(' ')[1]
+        date = date.concat(objectDate)
       })
       return date
     },
