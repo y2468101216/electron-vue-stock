@@ -15,19 +15,7 @@
             placeholder="輸入台灣股票代號或完整名稱"
           ></b-form-input>
           </b-form-group>
-          <b-form-group
-            id="input-group-start-date"
-            label="開始日期"
-            label-for="start-date"
-          >
-            <date-picker
-              id="start-date"
-              v-model="form.start_date"
-              required
-              placeholder="輸入開始日期"
-            ></date-picker>
-          </b-form-group>
-          <b-button type="submit" variant="primary">加入股票</b-button>
+          <b-button type="submit" variant="primary">監視股票</b-button>
           <b-button type="reset" variant="danger">重置</b-button>
         </b-form>
         <b-card-group>
@@ -37,23 +25,23 @@
             </b-card>
         </b-card-group>
 
-        <b-card class="mt-3" header="走勢圖 (單位:台幣)" v-show="chart.show">
+        <b-card class="mt-3" header="當日5分鐘走勢圖 (單位:台幣)" v-show="chart.show">
           <line-chart
             :data="chart.data"
             :options="chart.options"
-            :count="chart.count"/>
+            :count="chart.count"
+            :label="chart.label"/>
         </b-card>
     </main>
   </div>
 </template>
 
 <script>
-  import DatePicker from 'vue2-datepicker'
   import LineChart from './Chart.vue'
 
   export default {
     name: 'Price',
-    components: {DatePicker, LineChart},
+    components: {LineChart},
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
@@ -61,27 +49,31 @@
       onSubmit (evt) {
         evt.preventDefault()
         let that = this
-        this.findStock(that.form.stock_id, this.$db, this.remoteApi)
+        if (this.timeoutId !== null) {
+          window.clearInterval(this.timeoutId)
+        }
+        this.findStock(that.form.stock_id, that.$db, that.remoteApi)
+        this.timeoutId = window.setInterval(function () {
+          that.findStock(that.form.stock_id, that.$db, that.remoteApi)
+        }, 300000)
       },
       remoteApi (stock) {
         let that = this
-        if (that.card.includes(stock.name)) {
-          return
-        }
         this.$http.post(
           this.$base_url,
           {
-            'dataset': 'TaiwanStockPrice',
+            'dataset': 'TaiwanStockPriceMinute',
             'stock_id': this.form.stock_id,
             'date': this.form.start_date
           }
         ).then(function (response) {
-          that.chart.data[stock.name] = {
-            close: response.data.data.close,
+          that.chart.data = {
+            deal_price: response.data.data.deal_price,
             date: response.data.data.date
           }
+          that.chart.label = stock.name
 
-          if (!that.card.includes(stock.name)) {
+          if (!that.card.includes(stock.name) || that.card.length > 1) {
             that.card.push(stock.name)
           }
           that.chart.count++
@@ -95,6 +87,10 @@
         this.chart.show = false
         this.card = []
         this.chart.data = {}
+        if (this.timeoutId !== null) {
+          window.clearInterval(this.timeoutId)
+        }
+        this.timeoutId = null
       },
       deleteCard (stockName) {
         let index = this.card.indexOf(stockName)
@@ -121,9 +117,11 @@
           data: {},
           options: null,
           show: false,
-          count: 0
+          count: 0,
+          label: null
         },
-        card: []
+        card: [],
+        timeoutId: null
       }
     }
   }
