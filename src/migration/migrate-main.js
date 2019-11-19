@@ -10,9 +10,8 @@ class migrateMain {
       let Schema = require('./schemas/Version' + i + 'Migrate')
       let Seeder = require('../seeder/Version' + i + 'Seeder')
       db.version(i).stores(Schema).upgrade(Seeder)
-
-      return db
     }
+    return db
   }
 }
 
