@@ -31,9 +31,10 @@
           <b-button type="reset" variant="danger">重置</b-button>
         </b-form>
         <b-card-group>
-            <b-card v-for="item in card" :key="item">
-                <span> {{ item }} </span>
-                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" />
+            <b-card v-for="item in card" :key="item.code">
+                <span> {{ item.name }} </span>
+                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" class="float-right" />
+                <Icon stockId="item"/>
             </b-card>
         </b-card-group>
 
@@ -50,10 +51,11 @@
 <script>
   import DatePicker from 'vue2-datepicker'
   import LineChart from './Chart.vue'
+  import Icon from '../favorite/Icon'
 
   export default {
     name: 'Price',
-    components: {DatePicker, LineChart},
+    components: {Icon, DatePicker, LineChart},
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
@@ -81,12 +83,20 @@
             date: response.data.data.date
           }
 
-          if (!that.card.includes(stock.name)) {
-            that.card.push(stock.name)
+          if (!that.inCard(stock)) {
+            that.card.push(stock)
           }
           that.chart.count++
           that.chart.show = true
         })
+      },
+      inCard (stock) {
+        for (let item in this.card) {
+          if (this.card[item].code === stock.code) {
+            return true
+          }
+        }
+        return false
       },
       onReset (evt) {
         evt.preventDefault()
