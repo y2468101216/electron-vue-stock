@@ -34,7 +34,7 @@
             <b-card v-for="item in card" :key="item.code">
                 <span> {{ item.name }} </span>
                 <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" class="float-right" />
-                <Icon stockId="item"/>
+                <Icon :stockId="item.code" />
             </b-card>
         </b-card-group>
 

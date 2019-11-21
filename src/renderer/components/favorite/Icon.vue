@@ -1,7 +1,7 @@
 <template>
     <span>
-        <font-awesome-icon icon="star" v-show="isFavorite" />
-        <font-awesome-icon :icon="['far', 'star']" v-show="!isFavorite" />
+        <font-awesome-icon icon="star" v-show="isFavorite" v-on:click="deleteFavorite()" />
+        <font-awesome-icon :icon="['far', 'star']" v-show="!isFavorite" v-on:click="addFavorite()" />
     </span>
 </template>
 
@@ -14,22 +14,32 @@
         default: null
       }
     },
-    data: {
-      isFavorite: false
+    data () {
+      return {
+        isFavorite: false
+      }
     },
     methods: {
       addFavorite () {
         let that = this
-        this.$db.favorites.where({code: this.stockId}).first((favorite) => {
-          if (favorite) {
+        this.$db.favorites.where({code: this.stockId}).count((count) => {
+          if (count >= 1) {
             return false
           }
 
           that.$db.favorites.add({
             code: this.stockId
           })
+          that.isFavorite = true
 
           return true
+        })
+      },
+      deleteFavorite () {
+        let that = this
+        this.$db.favorites.where({code: this.stockId}).first((favorite) => {
+          that.$db.favorites.delete(favorite.id)
+          that.isFavorite = false
         })
       }
     }
