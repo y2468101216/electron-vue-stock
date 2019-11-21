@@ -1,4 +1,4 @@
 module.exports = {
   stocks: '++id, code, name',
-  favorites: '++id, code'
+  favorites: '++id, code, data'
 }

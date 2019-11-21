@@ -12,6 +12,10 @@
       stockId: {
         type: String,
         default: null
+      },
+      stockData: {
+        type: Array,
+        default: null
       }
     },
     data () {
@@ -19,16 +23,27 @@
         isFavorite: false
       }
     },
+    mounted () {
+      let that = this
+      console.log(this.stockData)
+      this.$db.favorites.where({code: this.stockId}).count((count) => {
+        if (count >= 1) {
+          that.isFavorite = true
+        }
+      })
+    },
     methods: {
       addFavorite () {
         let that = this
+        console.log(this.stockData)
         this.$db.favorites.where({code: this.stockId}).count((count) => {
           if (count >= 1) {
             return false
           }
 
           that.$db.favorites.add({
-            code: this.stockId
+            code: that.stockId,
+            data: that.stockData
           })
           that.isFavorite = true
 

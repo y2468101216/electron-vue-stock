@@ -23,6 +23,11 @@ export default new Router({
       path: '/minute-price',
       name: 'minute-price',
       component: require('@/components/MinutePrice/Price').default
+    },
+    {
+      path: '/favorite',
+      name: 'favorite',
+      component: require('@/components/Favorite/List').default
     }
   ]
 })
