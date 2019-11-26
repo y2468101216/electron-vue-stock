@@ -71,12 +71,18 @@
         if (that.card.includes(stock.name)) {
           return
         }
+
+        let bodyFrom = new FormData()
+        bodyFrom.set('dataset', 'TaiwanStockPrice')
+        bodyFrom.set('stock_id', this.form.stock_id)
+        bodyFrom.set('date', this.form.start_date)
+
         this.$http.post(
           this.$base_url,
-          {
-            'dataset': 'TaiwanStockPrice',
-            'stock_id': this.form.stock_id,
-            'date': this.form.start_date
+          bodyFrom, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
         ).then(function (response) {
           that.chart.data[stock.name] = {

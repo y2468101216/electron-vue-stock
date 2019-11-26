@@ -1,10 +1,10 @@
 <template>
     <b-table small :fields="fields" :items="favorites" responsive="sm">
         <template v-slot:cell(code)="data">
-            {{ data.item }}
+            {{ data.item.code }}
         </template>
         <template v-slot:cell(name)="data">
-            {{ data.item.value.name }}
+            {{ data.item.data.name }}
         </template>
     </b-table>
 </template>
@@ -29,6 +29,7 @@
         let that = this
         this.$db.favorites.toArray((favorites) => {
           that.favorites = favorites
+          console.log(favorites)
         })
       }
     }
