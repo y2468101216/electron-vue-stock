@@ -20,8 +20,10 @@
         </b-form>
         <b-card-group>
             <b-card v-for="item in card" :key="item">
-                <span> {{ item }} </span>
-                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" />
+                <span> {{ item.name }} </span>
+                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" class="float-right" />
+                <Icon :stockId="item.code"
+                      :stockData="item" />
             </b-card>
         </b-card-group>
 
@@ -38,10 +40,31 @@
 
 <script>
   import LineChart from './Chart.vue'
+  import Icon from '../Favorite/Icon'
 
   export default {
     name: 'Price',
-    components: {LineChart},
+    components: {LineChart, Icon},
+    props: {
+      favoriteStockId: {
+        type: String,
+        default: null
+      }
+    },
+    mounted: function () {
+      if (this.favoriteStockId === null) {
+        return null
+      }
+      let that = this
+      this.form.stock_id = this.favoriteStockId
+      if (this.timeoutId !== null) {
+        window.clearInterval(this.timeoutId)
+      }
+      this.findStock(this.favoriteStockId, that.$db, that.remoteApi)
+      this.timeoutId = window.setInterval(function () {
+        that.findStock(that.favoriteStockId, that.$db, that.remoteApi)
+      }, 300000)
+    },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
@@ -60,7 +83,7 @@
       remoteApi (stock) {
         let that = this
         let bodyFrom = new FormData()
-        bodyFrom.set('dataset', 'TaiwanStockPrice')
+        bodyFrom.set('dataset', 'TaiwanStockPriceMinute')
         bodyFrom.set('stock_id', this.form.stock_id)
         bodyFrom.set('date', this.form.start_date)
         this.$http.post(
@@ -71,15 +94,14 @@
             }
           }
         ).then(function (response) {
+          that.card = []
           that.chart.data = {
             deal_price: response.data.data.deal_price,
             date: response.data.data.date
           }
           that.chart.label = stock.name
 
-          if (!that.card.includes(stock.name) || that.card.length > 1) {
-            that.card.push(stock.name)
-          }
+          that.card.push(stock)
           that.chart.count++
           that.chart.show = true
         })

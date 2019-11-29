@@ -15,14 +15,16 @@ export default new Router({
       redirect: '/'
     },
     {
-      path: '/price',
+      path: '/price/:favoriteStockId',
       name: 'price',
-      component: require('@/components/Price/Price').default
+      component: require('@/components/Price/Price').default,
+      props: true
     },
     {
-      path: '/minute-price',
+      path: '/minute-price/:favoriteStockId',
       name: 'minute-price',
-      component: require('@/components/MinutePrice/Price').default
+      component: require('@/components/MinutePrice/Price').default,
+      props: true
     },
     {
       path: '/favorite',

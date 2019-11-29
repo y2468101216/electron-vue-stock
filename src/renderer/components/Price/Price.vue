@@ -57,14 +57,28 @@
   export default {
     name: 'Price',
     components: {Icon, DatePicker, LineChart},
+    props: {
+      favoriteStockId: {
+        type: String,
+        default: null
+      }
+    },
+    mounted: function () {
+      console.log('mounted favoriteStockId', this.favoriteStockId)
+      if (this.favoriteStockId === null) {
+        return null
+      }
+      this.form.stock_id = this.favoriteStockId
+      this.form.start_date = this.$moment().subtract(7, 'days').format('YYYY-MM-DD')
+      this.findStock(this.form.stock_id, this.$db, this.remoteApi)
+    },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
       },
       onSubmit (evt) {
         evt.preventDefault()
-        let that = this
-        this.findStock(that.form.stock_id, this.$db, this.remoteApi)
+        this.findStock(this.form.stock_id, this.$db, this.remoteApi)
       },
       remoteApi (stock) {
         let that = this

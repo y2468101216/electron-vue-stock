@@ -14,7 +14,7 @@
         default: null
       },
       stockData: {
-        type: Array,
+        type: Object,
         default: null
       }
     },
@@ -25,7 +25,7 @@
     },
     mounted () {
       let that = this
-      console.log(this.stockData)
+      console.log(this.stockId)
       this.$db.favorites.where({code: this.stockId}).count((count) => {
         if (count >= 1) {
           that.isFavorite = true
@@ -35,7 +35,6 @@
     methods: {
       addFavorite () {
         let that = this
-        console.log(this.stockData)
         this.$db.favorites.where({code: this.stockId}).count((count) => {
           if (count >= 1) {
             return false

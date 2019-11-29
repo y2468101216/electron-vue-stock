@@ -6,6 +6,10 @@
         <template v-slot:cell(name)="data">
             {{ data.item.data.name }}
         </template>
+        <template v-slot:cell(action)="data">
+            <b-button v-on:click="redirect('price', data.item.code)">收盤走勢圖</b-button>
+            <b-button v-on:click="redirect('minute-price', data.item.code)">即時走勢圖</b-button>
+        </template>
     </b-table>
 </template>
 
@@ -17,7 +21,8 @@
         favorites: [],
         fields: [
           { key: 'code', label: '股票代碼' },
-          { key: 'name', label: '股票名稱' }
+          { key: 'name', label: '股票名稱' },
+          { key: 'action', label: '動作' }
         ]
       }
     },
@@ -29,8 +34,10 @@
         let that = this
         this.$db.favorites.toArray((favorites) => {
           that.favorites = favorites
-          console.log(favorites)
         })
+      },
+      redirect (action, code) {
+        this.$router.push({name: action, params: {favoriteStockId: code}})
       }
     }
   }
