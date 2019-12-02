@@ -31,9 +31,11 @@
           <b-button type="reset" variant="danger">重置</b-button>
         </b-form>
         <b-card-group>
-            <b-card v-for="item in card" :key="item">
-                <span> {{ item }} </span>
-                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(item)" stockId="item" />
+            <b-card v-for="(item, index) in card" :key="item.code">
+                <span> {{ item.name }} </span>
+                <font-awesome-icon icon="trash-alt" v-on:click="deleteCard(index)" class="float-right" />
+                <Icon :stockId="item.code"
+                      :stockData="item" />
             </b-card>
         </b-card-group>
 
@@ -50,30 +52,51 @@
 <script>
   import DatePicker from 'vue2-datepicker'
   import LineChart from './Chart.vue'
+  import Icon from '../Favorite/Icon'
 
   export default {
     name: 'Price',
-    components: {DatePicker, LineChart},
+    components: {Icon, DatePicker, LineChart},
+    props: {
+      favoriteStockId: {
+        type: String,
+        default: null
+      }
+    },
+    mounted: function () {
+      console.log('mounted favoriteStockId', this.favoriteStockId)
+      if (this.favoriteStockId === null) {
+        return null
+      }
+      this.form.stock_id = this.favoriteStockId
+      this.form.start_date = this.$moment().subtract(7, 'days').format('YYYY-MM-DD')
+      this.findStock(this.form.stock_id, this.$db, this.remoteApi)
+    },
     methods: {
       open (link) {
         this.$electron.shell.openExternal(link)
       },
       onSubmit (evt) {
         evt.preventDefault()
-        let that = this
-        this.findStock(that.form.stock_id, this.$db, this.remoteApi)
+        this.findStock(this.form.stock_id, this.$db, this.remoteApi)
       },
       remoteApi (stock) {
         let that = this
         if (that.card.includes(stock.name)) {
           return
         }
+
+        let bodyFrom = new FormData()
+        bodyFrom.set('dataset', 'TaiwanStockPrice')
+        bodyFrom.set('stock_id', this.form.stock_id)
+        bodyFrom.set('date', this.form.start_date)
+
         this.$http.post(
           this.$base_url,
-          {
-            'dataset': 'TaiwanStockPrice',
-            'stock_id': this.form.stock_id,
-            'date': this.form.start_date
+          bodyFrom, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
           }
         ).then(function (response) {
           that.chart.data[stock.name] = {
@@ -81,12 +104,20 @@
             date: response.data.data.date
           }
 
-          if (!that.card.includes(stock.name)) {
-            that.card.push(stock.name)
+          if (!that.inCard(stock)) {
+            that.card.push(stock)
           }
           that.chart.count++
           that.chart.show = true
         })
+      },
+      inCard (stock) {
+        for (let item in this.card) {
+          if (this.card[item].code === stock.code) {
+            return true
+          }
+        }
+        return false
       },
       onReset (evt) {
         evt.preventDefault()
@@ -96,10 +127,10 @@
         this.card = []
         this.chart.data = {}
       },
-      deleteCard (stockName) {
-        let index = this.card.indexOf(stockName)
+      deleteCard (id) {
+        let index = this.card.indexOf(id)
         this.card.splice(index, 1)
-        delete this.chart.data[stockName]
+        delete this.chart.data[id]
         this.chart.count++
 
         if (this.card.length === 0) {

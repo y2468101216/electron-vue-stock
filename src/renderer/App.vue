@@ -8,8 +8,9 @@
             <b-navbar-nav>
               <b-nav-item href="#">
                 <router-link to="/">首頁</router-link>
-                <router-link to="/price">收盤走勢圖</router-link>
-                <router-link to="/minute-price">即時走勢圖</router-link>
+                <router-link to="/price/0050">收盤走勢圖</router-link>
+                <router-link to="/minute-price/0050">即時走勢圖</router-link>
+                <router-link to="/favorite">我的最愛</router-link>
               </b-nav-item>
             </b-navbar-nav>
           </b-collapse>

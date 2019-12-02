@@ -1,6 +1,6 @@
 {
   "name": "electron-vue-stock",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "author": "昱廷陳昱廷 <y2468101216@gmail.com>",
   "description": "electron vue stock",
   "license": "MIT",
@@ -67,6 +67,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-regular-svg-icons": "^5.11.2",
     "@fortawesome/free-solid-svg-icons": "^5.11.2",
     "@fortawesome/vue-fontawesome": "^0.1.8",
     "axios": "^0.18.0",
