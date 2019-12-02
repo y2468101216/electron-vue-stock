@@ -1,8 +1,13 @@
 # electron-vue-stock
 
-> electron vue stock
+開源跨平台看盤系統，主要以台股為主。
+歡迎提出 pr 
 
-#### Build Setup
+## 下載頁面
+
+[點我](https://github.com/y2468101216/electron-vue-stock/releases)
+
+## Build Setup
 
 ``` bash
 # install dependencies
@@ -23,20 +28,20 @@ npm run lint
 
 ```
 
-# Ref Project
+## api 來源
 
 [FinMind/FinMind](https://github.com/FinMind/FinMind)
 
 ---
 
-# Feature
+## Feature
 
 1. 收盤走勢圖查詢 
 2. 即時看盤
+3. 我的最愛
 
-# Task
+## Task
 
 1. 增加證交所最佳五檔
-2. 加入我的最愛
 
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
